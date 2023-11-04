@@ -7,12 +7,21 @@
 void borda(int lin, int col); // Menu de exibição
 void gotoxy(int x, int y); // Função para movimentar os caracteres na tela
 void textcolor(int color, int background); // Função para trocar a cor da letra e do fundo
-int menuopcao();
+int menuopcao(int lin, int col, int qtd, char lista[3][10]);
 
 
 int main(void)
 {
-    enuopcao();
+    int opc;
+    char lista[3][10];
+    fgets(lista[0], sizeof(lista), stdin);
+    fgets(lista[1], sizeof(lista), stdin);
+    fgets(lista[2], sizeof(lista), stdin);
+
+    while (1 == 1)
+    {
+        opc = menuopcao(10,10,3,lista);
+    }
     
     //borda();
 }
@@ -70,8 +79,51 @@ void textcolor(int color, int background)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), soma); // Recomendo pesquisar sobre
 }
 
-int menuopcao()
+int menuopcao(int lin, int col, int qtd, char lista[3][10])
 {
+    int opc=1;
+    int lin2, col2, linha, tamMaxitem;
 
+    // Bloco de código para procurar qual linha de texto é maior dentro das opções
+    tamMaxitem = strlen(lista[0]);
+    for(int i= 1; i < qtd; i++)
+    {
+        if (tamMaxitem <= strlen(lista[i]))
+        {
+            tamMaxitem = strlen(lista[i]);
+        }
+        
+    }
+    // Ajeitando a altura
+    lin2 = lin+(qtd*2+4);
+    col2 = col+tamMaxitem+4;
+    // Criando as bordas com os resultados obtidos
+    borda(lin2, col2);
+
+    // Criando as opções
+    while (1 == 1)
+    {
+        linha=lin+2;
+        for(int i=0; i<qtd; i++)
+        {
+            if(i+1 == opc)
+            {
+                textcolor(3, 5);
+            }
+            else
+            {
+                textcolor(2, 5);
+            }
+            gotoxy(linha, col+2);
+            printf("%s", lista[i]);
+            linha += 2;
+        }
+        
+        
+
+
+    }
+    return 0;
+    
 
 }
