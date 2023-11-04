@@ -12,7 +12,10 @@ int menuopcao();
 
 int main(void)
 {
-    enuopcao();
+
+
+
+    menuopcao();
     
     //borda();
 }
@@ -72,6 +75,24 @@ void textcolor(int color, int background)
 
 int menuopcao()
 {
+    int opcao;
+    borda(15, 45);
+    gotoxy(15, 1);
+    printf("MENU PRINCIPAL");
+
+    gotoxy(11, 4);
+    printf("1 - CONFIGURACOES");
+    gotoxy(11, 6);
+    printf("2 - JOGO PADRAO");
+    gotoxy(11, 8);
+    printf("3 - JOGO MULTIPLAYER");
+    gotoxy(19, 10);
+    printf("OPCAO:");
+    gotoxy(21, 11);
+    scanf("%d", &opcao);
 
 
+
+    gotoxy(0,25);
+    return 1;
 }
