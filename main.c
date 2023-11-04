@@ -5,9 +5,10 @@
 
 
 void borda(int lin, int col); // Menu de exibição
+void personagem(void); // Criação do personagem da forca
 void gotoxy(int x, int y); // Função para movimentar os caracteres na tela
 void textcolor(int color, int background); // Função para trocar a cor da letra e do fundo
-int menuopcao();
+int menuopcao();  // Função de exibição das opções e escolha de uma opção
 
 
 int main(void)
@@ -17,7 +18,6 @@ int main(void)
 
     menuopcao();
     
-    //borda();
 }
 
 void borda(int lin, int col)
@@ -73,26 +73,102 @@ void textcolor(int color, int background)
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), soma); // Recomendo pesquisar sobre
 }
 
+void personagem(void)
+{
+    //Titulo
+    gotoxy(9, 2);
+    textcolor(4, 0);
+    printf("JOGO DA FORCA");
+    textcolor(7, 0);
+    // Suporte da forca
+    for (int i = 5; i < 14; i++)
+    {
+        gotoxy(i, 17);
+        printf("%c", 242); 
+    }
+    // Poste da forca
+    for (int i = 5; i < 18; i++)
+    {
+        gotoxy(9, i);
+        printf("%c", 179); 
+    }
+    // Curva da forca
+    gotoxy(9, 4);
+    printf("%c", 218);
+    // Parte superior da forca
+    for (int i = 10; i < 22; i++)
+    {
+        gotoxy(i, 4);
+        printf("%c", 196); 
+    }
+    // Curva para conectar com a corda
+    gotoxy(22, 4);
+    printf("%c", 191);
+    // Corda
+    for (int i = 5; i < 12; i++)
+    {
+        gotoxy(22, i);
+        printf("%c", 179); 
+    }
+    // Cabeça
+    gotoxy(22, 8);
+    printf("%c", 153);
+    // Tronco
+    gotoxy(22, 9);
+    printf("%c", 186); 
+    gotoxy(22, 10);
+    printf("%c", 186);
+    gotoxy(22, 11);
+    printf("%c", 186);
+
+    // Braço direito
+    gotoxy(23, 9);
+    printf("%c", 92);
+    gotoxy(24, 10);
+    printf("%c", 92);
+
+    // Braço esquerdo
+    gotoxy(21, 9);
+    printf("/");
+    gotoxy(20, 10);
+    printf("/");
+
+    // perna direito
+    gotoxy(23, 12);
+    printf("%c", 92);
+    gotoxy(24, 13);
+    printf("%c", 92);
+
+    // Perna esquerdo
+    gotoxy(21, 12);
+    printf("/");
+    gotoxy(20, 13);
+    printf("/");
+}
+
 int menuopcao()
 {
     int opcao;
-    borda(15, 45);
-    gotoxy(15, 1);
+    borda(20, 85);
+    personagem();
+    gotoxy(55, 3);
+    textcolor(9, 0);
     printf("MENU PRINCIPAL");
 
-    gotoxy(11, 4);
+    gotoxy(53, 6);
+    textcolor(7, 0);
     printf("1 - CONFIGURACOES");
-    gotoxy(11, 6);
+    gotoxy(53, 9);
     printf("2 - JOGO PADRAO");
-    gotoxy(11, 8);
+    gotoxy(53, 12);
     printf("3 - JOGO MULTIPLAYER");
-    gotoxy(19, 10);
+    gotoxy(58, 16);
     printf("OPCAO:");
-    gotoxy(21, 11);
+    gotoxy(61, 17);
+    textcolor(3,0);
     scanf("%d", &opcao);
-
-
-
+    textcolor(7,0);
+    
     gotoxy(0,25);
     return 1;
 }
