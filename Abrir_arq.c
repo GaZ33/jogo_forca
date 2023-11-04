@@ -10,7 +10,7 @@ int main()
   if (file == NULL)  // Se houve erro na abertura
   {
      printf("Problemas na abertura do arquivo\n");
-     return;
+     return 1;
   }
   i = 0;
   while (!feof(file))
