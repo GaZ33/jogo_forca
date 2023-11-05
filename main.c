@@ -8,19 +8,19 @@
 
 
 
-void borda(int lin, int col); // Menu de exibição
+void borda(int lin, int col); // Cria a borda da interface
 void personagem(int num); // Criação do personagem da forca
 void gotoxy(int x, int y); // Função para movimentar os caracteres na tela
 void textcolor(int color, int background); // Função para trocar a cor da letra e do fundo
 int menuopcao();  // Função de exibição das opções e escolha de uma opção
 int randomizarNumero(int max); // Função para randomizar um número
 void jogo(int vidas); // Função para inciar o jogo padrão
-void lacuna(int qntletras); // Cria as lacunas 
-void escolhapalavra(char palavra[30]);
-int bancodeletras(int qnt, char letrasescolhidas[15], char letra[15]);
-int contemnapalavra(char palavra[15], char linha[30], int *index);
-void won(int lifes);
-void lose();
+void lacuna(int qntletras); // Cria as lacunas  da forca
+void escolhapalavra(char palavra[30]); // Escolhe a palavra entre os arquivos
+int bancodeletras(int qnt, char letrasescolhidas[15], char letra[15]); //  Verifica se a letra já foi escolhida
+int contemnapalavra(char palavra[15], char linha[30], int *index); // Verifica se a letra está na palavra
+void won(int lifes); // Tela de vitória
+void lose(); // Tela d ederrota
 
 
 int main(void)
@@ -37,55 +37,51 @@ int main(void)
         {
             jogo(2);
         }
-        
-        
-        
-
     }
     
 }
 
-void borda(int lin, int col)
+void borda(int lin, int col) 
 {
     system("cls");
     int posX, posY, tamHon, tamAlt;
     // Caso queira alturar a posição do menu, mude essas 2 variáveis
-    posX = 0;       
+    posX = 0; // Define o inicio da posição X
     posY = 0;
     // Comprimento e altura do menu
-    tamHon = col;
-    tamAlt = lin;
+    tamHon = col; // Tamanho do Comprimento da borda
+    tamAlt = lin; // Tamanho da altura da borda
     gotoxy(posX, posY);
-    printf("%c", 201);
-    for (int i = 0; i < tamHon; i++)
+    printf("%c", 201); // Canto superior esquerdo
+    for (int i = 0; i < tamHon; i++) // Comprimento superior
     {
         printf("%c", 205);
     }
-    printf("%c", 187);
-    for (int i = posY+1, alt = tamAlt+posY; i < alt; i++)
+    printf("%c", 187); // Canto superior direuto
+    for (int i = posY+1, alt = tamAlt+posY; i < alt; i++) // Altura da borda esquerda
     {
         gotoxy(posX, i);
         printf("%c", 186);
     }
-    for (int i = posY+1, alt = tamAlt+posY, final = posX+tamHon+1; i < alt; i++)
+    for (int i = posY+1, alt = tamAlt+posY, final = posX+tamHon+1; i < alt; i++) // Altura da borda direita
     {
         gotoxy(final, i);
         printf("%c", 186);
     }
     gotoxy(posX, posY+tamAlt);
-    printf("%c", 200);
-    for (int i = 0; i < tamHon; i++)
+    printf("%c", 200); // Canto inferior direito
+    for (int i = 0; i < tamHon; i++) // Comprimento inferior
     {
         printf("%c", 205);
     }
-    printf("%c", 188);
+    printf("%c", 188);  // Canto inferior esquerdo
     
 }
 
 void gotoxy(int x, int y)
 {
     HANDLE hcon;
-    COORD dwPos;
+    COORD dwPos;  // Estrutura que pega 2 cordendas da tela
     dwPos.X = x;
     dwPos.Y = y;
     hcon = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -94,8 +90,8 @@ void gotoxy(int x, int y)
 
 void textcolor(int color, int background)
 {
-    int soma = color + (background * 16);
-    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), soma); // Recomendo pesquisar sobre
+    int soma = color + (background * 16); //Calculo para definir a cor no cmd
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), soma); // Função que realiza a mudança de cor
 }
 
 void personagem(int num)
@@ -192,7 +188,7 @@ void personagem(int num)
 
 int menuopcao()
 {
-    int opcao;
+    int opcao; // opcao do user
     borda(20, 85);
     personagem(0);
     gotoxy(55, 3);
@@ -221,7 +217,7 @@ int randomizarNumero(int max)
     // Inicializa o gerador de números aleatórios com o tempo atual
     srand(time(0));
     
-    // Gera um número aleatório entre 0 e 10
+    // Gera um número aleatório entre 0 e max
     int numeroAleatorio = rand() % max;
     
     return numeroAleatorio;
@@ -230,10 +226,10 @@ int randomizarNumero(int max)
 void escolhapalavra(char palavra[30])
 {
     FILE *file;
-    int tema = randomizarNumero(3);
-    int numerolinha;
-    char Linha[30];
-    int i;
+    int tema = randomizarNumero(3); // Escolha de um dos 3 temas
+    int numerolinha; // Escolha da linha do arquivo
+    char Linha[30]; // Palavra escolhida do arquivo
+    int i; // Variável para achar a linha correspondente no arquivo
 
     if (tema == 0)
     {
@@ -242,7 +238,6 @@ void escolhapalavra(char palavra[30])
         file = fopen("nome.txt", "r");
         if (file == NULL)  // Se houve erro na abertura
         {
-            
             printf("Problemas na abertura do arquivo\n");
             return;
         }
@@ -286,7 +281,6 @@ void escolhapalavra(char palavra[30])
         }
         gotoxy(40, 5);
         printf("Tema: objetos");
-        
     }
     if (tema == 2)
     {
@@ -313,38 +307,37 @@ void escolhapalavra(char palavra[30])
         gotoxy(40, 5);
         printf("Tema: comidas");
     }
-
     fclose(file);
-    strcpy(palavra, Linha);
+    strcpy(palavra, Linha); // Copia a palavra escolhida do arquivo para a palavra a ser adivinhada
 }  
 
 
 void jogo(int vidas)
 {
-    char tentativa[15], palavra[15], palavraescolhida[30];
-    int verifica;
-    int lifes = 6;
+    char tentativa[15], palavra[15], palavraescolhida[30]; // tentativa = entrada para o user tentar adivinhar
+    // palavra = banco de letras e palavraescolhida é a palavra a ser adivinhada
+    int verifica; // variável para verificar as ocasiões durante o jogo
+    int lifes = 6; // qnt de vidas
      //randomizarNumero(5);
     system("cls");
     
     borda(20, 85);
     escolhapalavra(palavraescolhida);
-    if(vidas == 2)
+    if(vidas == 2) //  Se estiver na dificuldade hard, o tema será ocultado
     {
         gotoxy(40, 5);
         printf("Tema: #########");
     }
-    fflush(stdin);
-    int qnt = strlen(palavraescolhida);
+    int qnt = strlen(palavraescolhida); // contar a quantidade de letras para desenhar as lacunas
     lacuna(qnt);
     for (int i = 0; i < 15; i++)
     {
-        palavra[i] = NULL;
+        palavra[i] = NULL; // Limpando o lixo da array
     }
     gotoxy(40,40);
     printf("%s", palavraescolhida);
-    fflush(stdin);
-    int index = 0;
+    fflush(stdin); // Necessário, pois o último input foi um número
+    int index = 0; // Auxilia o index da array palavra
     while (lifes != 0)
     {
         personagem(lifes);
@@ -352,49 +345,50 @@ void jogo(int vidas)
         printf("Vidas restantes: %d", lifes);
         for (int i = 0; i < 15; i++)
         {
-            tentativa[i] = NULL;
+            tentativa[i] = NULL; // Limpando o lixo da array para toda tentativa
         }
         gotoxy(35, 10);
-        printf("Letras ja escolhidas: %s", palavra);
+        printf("Letras ja escolhidas: %s", palavra); 
         gotoxy(35, 13);
         printf("Letra ou palavra: ");
         
         fgets(tentativa, sizeof(tentativa), stdin);
         
         int letras = strlen(tentativa);
-        if (letras == 2)
+        if (letras == 2) // Se o user digitar só uma letra execut ao if
         {
-            int check = bancodeletras(strlen(palavra), palavra, tentativa);
-            if (check == 1)
+            int check = bancodeletras(strlen(palavra), palavra, tentativa); // Verifica se a letra ja foi
+            if (check == 1) // Se a letra já foi, então ele pula esse loop
             {
                 continue;
             }
-            verifica = contemnapalavra(tentativa, palavraescolhida, &index);
-            if (0 == verifica)
+            verifica = contemnapalavra(tentativa, palavraescolhida, &index); // verifica se a letra está ou não na palavra
+            if (0 == verifica) // Se não está, desconta a vida
             {
                 lifes -= vidas;
-                
             }
-            
-            
-        }
-        else
+        }        
+        else if (letras > 2) // Se ele tentar adivinhar a palavra
         {
             for (int i = 0; i < 15; i++)
             {
                 tentativa[i] = tolower(tentativa[i]);
             }
             
-            if (strcmp(tentativa, palavraescolhida) == 0)
+            if (strcmp(tentativa, palavraescolhida) == 0) // Se as palavras forem iguais ele ganha
             {
                 won(lifes);
                 break;
             }
             lose();
             break;
-            
         }
-        if (verifica == 3)
+        
+        else // Se ele só apertar espaço
+        {
+            continue;
+        }
+        if (verifica == 3) // Se o user ganhar por acertar todas as letras um a um
             {
                 won(lifes);
                 break;
@@ -409,7 +403,7 @@ void jogo(int vidas)
 
 void lacuna(int qntletras)
 {
-    for (int i = 25; i <=  qntletras*6 + 18; i+=6)
+    for (int i = 25; i <=  qntletras*6 + 18; i+=6) // Cria o espaço entre as lacunas
     {
         gotoxy(i, 17);
         printf("___");
@@ -419,38 +413,38 @@ int bancodeletras(int qnt, char letrasescolhidas[15], char letra[15])
 {
    for (int i = 0; i < qnt; i++)
    {
-        if (letra[0] == letrasescolhidas[i])
+        if (letra[0] == letrasescolhidas[i]) // Verifica se a letra já foi
         {
             return 1;
         }
         
    }
-   letrasescolhidas[qnt] = letra[0];
+   letrasescolhidas[qnt] = letra[0]; // Se não foi, adiciona ela na posição final
    return 0;
    
 }
 int contemnapalavra(char palavra[15], char linha[30], int *index)
 {
-    int esta = 0;
+    int esta = 0; // Verifica se está ou não na palavra (quantidade de vezes)
     
-    int j = strlen(linha);
+    int j = strlen(linha); // Tamanho da palavra a ser adivinhada
     for (int i = 0; i < j; i++)
     {
         if (tolower(palavra[0]) == linha[i])
         {
-            int f = 26 + i*6;
+            int f = 26 + i*6; // Lógica para preencher no lugar correto da lacuna
             gotoxy(f, 16);
             printf("%c", palavra[0]);
-            *index = *index + 1;
+            *index = *index + 1; // Auxilia no banco de palavras
             esta++;
         }
     }
-    if (esta == 0)
+    if (esta == 0) //  Se não tiver na palavra
     {
         return 0;
         
     }
-    if (*index == j - 1)
+    if (*index == j - 1) // Se o user acerta todas as palavras uma por uma
     {
         return 3;
     }
