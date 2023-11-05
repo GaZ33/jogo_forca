@@ -14,24 +14,30 @@ void gotoxy(int x, int y); // Função para movimentar os caracteres na tela
 void textcolor(int color, int background); // Função para trocar a cor da letra e do fundo
 int menuopcao();  // Função de exibição das opções e escolha de uma opção
 int randomizarNumero(int max); // Função para randomizar um número
-void jogopadrao(int vidas); // Função para inciar o jogo padrão
+void jogo(int vidas); // Função para inciar o jogo padrão
 void lacuna(int qntletras); // Cria as lacunas 
+void escolhapalavra(char palavra[30]);
 int bancodeletras(int qnt, char letrasescolhidas[15], char letra[15]);
 int contemnapalavra(char palavra[15], char linha[30], int *index);
-void won();
+void won(int lifes);
 void lose();
 
 
 int main(void)
 {
     int opcao;
-    while (opcao != 4)
+    while (opcao != 3)
     {
         opcao = menuopcao();
         if (opcao == 1)
         {
-            jogopadrao(1);
+            jogo(1);
         }
+        if (opcao == 2)
+        {
+            jogo(2);
+        }
+        
         
         
 
@@ -107,7 +113,7 @@ void personagem(int num)
     }
     // Poste da forca
     for (int i = 5; i < 18; i++)
-    {
+    {   
         gotoxy(9, i);
         printf("%c", 179); 
     }
@@ -193,18 +199,16 @@ int menuopcao()
     textcolor(9, 0);
     printf("MENU PRINCIPAL");
 
-    gotoxy(53, 6);
     textcolor(7, 0);
-    printf("1 - CONFIGURACOES");
+    gotoxy(53, 6);
+    printf("1 - JOGO PADRAO");
     gotoxy(53, 9);
-    printf("2 - JOGO PADRAO");
+    printf("2 - HARD MODE");
     gotoxy(53, 12);
-    printf("3 - JOGO MULTIPLAYER");
-    gotoxy(53, 15);
-    printf("4 - SAIR");
-    gotoxy(58, 17);
+    printf("3 - SAIR");
+    gotoxy(58, 14);
     printf("OPCAO:");
-    gotoxy(61, 18);
+    gotoxy(61, 15);
     textcolor(3,0);
     scanf("%d", &opcao);
     textcolor(7,0);
@@ -222,22 +226,47 @@ int randomizarNumero(int max)
     
     return numeroAleatorio;
 }
-void jogopadrao(int vidas)
+
+void escolhapalavra(char palavra[30])
 {
     FILE *file;
-    char Linha[30], tentativa[15], palavra[15];
-    int i;
-    
-    int verifica;
-    int lifes = 6;
+    int tema = randomizarNumero(3);
     int numerolinha;
-    int tema = 0; //randomizarNumero(5);
-    system("cls");
+    char Linha[30];
+    int i;
+
     if (tema == 0)
     {
         numerolinha = randomizarNumero(100);
         // Abre o arquivo de TEXTO para LEITURA
-        file = fopen("aa.txt", "r");
+        file = fopen("nome.txt", "r");
+        if (file == NULL)  // Se houve erro na abertura
+        {
+            
+            printf("Problemas na abertura do arquivo\n");
+            return;
+        }
+        i = 0;
+        while (!feof(file))
+        {
+            // Lê uma linha (inclusive com o '\n')
+            fgets(Linha, 30, file);  // o 'fgets' lê até 29 caracteres ou até o '\n'
+            if (i == numerolinha)
+            {
+                break;
+            }
+            
+            i++;
+        }
+        gotoxy(40, 5);
+        printf("Tema: nomes");
+        
+    }
+    if (tema == 1)
+    {
+        numerolinha = randomizarNumero(100);
+        // Abre o arquivo de TEXTO para LEITURA
+        file = fopen("objetos.txt", "r");
         if (file == NULL)  // Se houve erro na abertura
         {
             printf("Problemas na abertura do arquivo\n");
@@ -255,19 +284,65 @@ void jogopadrao(int vidas)
             
             i++;
         }
+        gotoxy(40, 5);
+        printf("Tema: objetos");
         
+    }
+    if (tema == 2)
+    {
+        numerolinha = randomizarNumero(100);
+        // Abre o arquivo de TEXTO para LEITURA
+        file = fopen("comida.txt", "r");
+        if (file == NULL)  // Se houve erro na abertura
+        {
+            printf("Problemas na abertura do arquivo\n");
+            return;
+        }
+        i = 0;
+        while (!feof(file))
+        {
+            // Lê uma linha (inclusive com o '\n')
+            fgets(Linha, 30, file);  // o 'fgets' lê até 29 caracteres ou até o '\n'
+            if (i == numerolinha)
+            {
+                break;
+            }
+            
+            i++;
+        }
+        gotoxy(40, 5);
+        printf("Tema: comidas");
     }
 
     fclose(file);
+    strcpy(palavra, Linha);
+}  
+
+
+void jogo(int vidas)
+{
+    char tentativa[15], palavra[15], palavraescolhida[30];
+    int verifica;
+    int lifes = 6;
+     //randomizarNumero(5);
+    system("cls");
+    
     borda(20, 85);
-    int qnt = strlen(Linha);
+    escolhapalavra(palavraescolhida);
+    if(vidas == 2)
+    {
+        gotoxy(40, 5);
+        printf("Tema: #########");
+    }
+    fflush(stdin);
+    int qnt = strlen(palavraescolhida);
     lacuna(qnt);
     for (int i = 0; i < 15; i++)
     {
         palavra[i] = NULL;
     }
     gotoxy(40,40);
-    printf("%s", Linha);
+    printf("%s", palavraescolhida);
     fflush(stdin);
     int index = 0;
     while (lifes != 0)
@@ -294,7 +369,7 @@ void jogopadrao(int vidas)
             {
                 continue;
             }
-            verifica = contemnapalavra(tentativa, Linha, &index);
+            verifica = contemnapalavra(tentativa, palavraescolhida, &index);
             if (0 == verifica)
             {
                 lifes -= vidas;
@@ -305,9 +380,14 @@ void jogopadrao(int vidas)
         }
         else
         {
-            if (strcmp(tentativa, Linha) == 0)
+            for (int i = 0; i < 15; i++)
             {
-                won();
+                tentativa[i] = tolower(tentativa[i]);
+            }
+            
+            if (strcmp(tentativa, palavraescolhida) == 0)
+            {
+                won(lifes);
                 break;
             }
             lose();
@@ -316,7 +396,7 @@ void jogopadrao(int vidas)
         }
         if (verifica == 3)
             {
-                printf("BOWAAAAAAAAAAAAA");
+                won(lifes);
                 break;
             }
     }
@@ -324,7 +404,6 @@ void jogopadrao(int vidas)
     {
         lose();
     }
-    
     
 }
 
@@ -379,23 +458,66 @@ int contemnapalavra(char palavra[15], char linha[30], int *index)
     return 1;
 }
 
-void won()
+void won(int lifes)
 {
     borda(20, 85);
     personagem(6);
 
+    // Cabeça
+    gotoxy(27, 13);
+    printf("%c", 153);
 
+    // Tronco
+    gotoxy(27, 14);
+    printf("%c", 186); 
+    gotoxy(27, 15);
+    printf("%c", 186);
+    gotoxy(27, 16);
+    printf("%c", 186);
 
+    // Braço direito
+    gotoxy(28, 14);
+    printf("%c", 92);
+    gotoxy(29, 15);
+    printf("%c", 92);
 
+    // Braço esquerdo
+    gotoxy(26, 14);
+    printf("/");
+    gotoxy(25, 15);
+    printf("/");
+
+    // perna direito
+    gotoxy(28, 17);
+    printf("%c", 92);
+    gotoxy(29, 18);
+    printf("%c", 92);
+
+    // Perna esquerdo
+    gotoxy(26, 17);
+    printf("/");
+    gotoxy(25, 18);
+    printf("/");
+
+    gotoxy(55, 10);
+    textcolor(2,0);
+    printf("YOU WON");
+    gotoxy(55, 11);
+    printf("Pontuacao: %d", lifes *25);
     getch();
+    textcolor(7,0);
 }
 void lose()
 {
     borda(20, 85);
     personagem(0);
 
+    gotoxy(55, 10);
+    textcolor(4,0);
+    printf("GAME OVER");
 
 
 
     getch();
+    textcolor(7,0);
 }
