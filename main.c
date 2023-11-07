@@ -5,6 +5,7 @@
 #include <time.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 
 
 
@@ -19,8 +20,11 @@ void lacuna(int qntletras); // Cria as lacunas  da forca
 void escolhapalavra(char palavra[30]); // Escolhe a palavra entre os arquivos
 int bancodeletras(int qnt, char letrasescolhidas[15], char letra[15]); //  Verifica se a letra já foi escolhida
 int contemnapalavra(char palavra[15], char linha[30], int *index); // Verifica se a letra está na palavra
+
 void won(int lifes); // Tela de vitória
 void lose(); // Tela d ederrota
+
+bool cheat;
 
 
 int main(void)
@@ -37,17 +41,29 @@ int main(void)
         {
             jogo(2);
         }
+        if (opcao == 10){
+            if (cheat == true){
+                cheat = false;
+            }
+            else{
+            cheat = true;
+            }
+        }
     }
     
 }
 
+
+
+//======================================== BORDA =======================================
 void borda(int lin, int col) 
 {
     system("cls");
     int posX, posY, tamHon, tamAlt;
-    // Caso queira alturar a posição do menu, mude essas 2 variáveis
+    // Caso queira alterar a posição do menu, mude essas 2 variáveis
     posX = 0; // Define o inicio da posição X
     posY = 0;
+
     // Comprimento e altura do menu
     tamHon = col; // Tamanho do Comprimento da borda
     tamAlt = lin; // Tamanho da altura da borda
@@ -77,6 +93,11 @@ void borda(int lin, int col)
     printf("%c", 188);  // Canto inferior esquerdo
     
 }
+//=========================================================================================
+
+
+
+
 
 void gotoxy(int x, int y)
 {
@@ -93,6 +114,19 @@ void textcolor(int color, int background)
     int soma = color + (background * 16); //Calculo para definir a cor no cmd
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), soma); // Função que realiza a mudança de cor
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/*================================== PERSONAGEM ================================*/
 
 void personagem(int num)
 {
@@ -185,6 +219,21 @@ void personagem(int num)
     
     textcolor(7, 0);
 }
+//============================================================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+//==================================== MENU =========================
 
 int menuopcao()
 {
@@ -194,6 +243,12 @@ int menuopcao()
     gotoxy(55, 3);
     textcolor(9, 0);
     printf("MENU PRINCIPAL");
+
+    if (cheat == true){
+    gotoxy(50, 18);
+    textcolor(5, 0);
+    printf("(cheat mode ligado)");
+    }
 
     textcolor(7, 0);
     gotoxy(53, 6);
@@ -206,12 +261,22 @@ int menuopcao()
     printf("OPCAO:");
     gotoxy(61, 15);
     textcolor(3,0);
+
     scanf("%d", &opcao);
     textcolor(7,0);
     
     gotoxy(0,25);
     return opcao;
 }
+
+//==============================================================
+
+
+
+
+
+
+
 int randomizarNumero(int max)
 {
     // Inicializa o gerador de números aleatórios com o tempo atual
@@ -326,7 +391,7 @@ void jogo(int vidas)
     if(vidas == 2) //  Se estiver na dificuldade hard, o tema será ocultado
     {
         gotoxy(40, 5);
-        printf("Tema: #########");
+        printf("Tema: #########(Hard Mode)");
     }
     int qnt = strlen(palavraescolhida); // contar a quantidade de letras para desenhar as lacunas
     lacuna(qnt);
@@ -334,8 +399,21 @@ void jogo(int vidas)
     {
         palavra[i] = NULL; // Limpando o lixo da array
     }
+
+
+
+
+    //==================== cheat mode ===================
+    if (cheat == true){
     gotoxy(40,40);
-    printf("%s", palavraescolhida);
+    textcolor(6, 0);
+    printf("   %s", palavraescolhida);
+    };
+    //====================================================
+
+
+
+
     fflush(stdin); // Necessário, pois o último input foi um número
     int index = 0; // Auxilia o index da array palavra
     while (lifes != 0)
